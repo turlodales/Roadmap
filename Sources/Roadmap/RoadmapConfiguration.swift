@@ -37,19 +37,15 @@ public struct RoadmapConfiguration: Sendable {
     /// - Parameters:
     ///   - roadmapJSONURL: The URL pointing to the JSON in the `RoadmapFeature` format.
     ///   - roadmapRequest: The Request pointing to the JSON in the `RoadmapFeature` format.
-    ///   - voter: The interface to use for retrieving and persisting votes. To use https://countapi.xyz/, provide instance of `FeatureVoterCountAPI`.
-    ///   - namespace: A unique namespace to use matching your app.
-    ///   See `https://countapi.xyz/` for more information.
-    ///   Defaults to your main bundle identifier.
+    ///   - voter: The interface to use for retrieving and persisting votes.
     ///   - style: Pick a `RoadmapStyle` that fits your app best. By default the `.standard` option is used.
     ///   - shuffledOrder: Set this to true to have a different order of features everytime the view is presented
-    ///   - sorting: /// If set, will be used for sorting features.
+    ///   - sorting: If set, will be used for sorting features.
     ///   - allowVotes: Set this to true to if you want to let users vote. Set it to false for read-only mode. This can be used to only let paying users vote for example.
     ///   - allowSearching: Set this to true to if you want to add a search bar so users can filter which features are shown.
     public init(roadmapJSONURL: URL? = nil,
                 roadmapRequest: URLRequest? = nil,
-                voter: FeatureVoter? = nil,
-                namespace: String? = nil,
+                voter: FeatureVoter,
                 style: RoadmapStyle = RoadmapTemplate.standard.style,
                 shuffledOrder: Bool = false,
                 sorting: (@Sendable (RoadmapFeature, RoadmapFeature) -> Bool)? = nil,
@@ -61,16 +57,12 @@ public struct RoadmapConfiguration: Sendable {
             fatalError("Missing roadmap URL or request")
         }
         
-        guard let namespace = namespace ?? Bundle.main.bundleIdentifier else {
-            fatalError("Missing namespace")
-        }
-        
         guard let url = roadmapJSONURL ?? roadmapRequest?.url else {
             fatalError("Missing URL")
         }
         
         self.roadmapRequest = roadmapRequest ?? URLRequest(url: url)
-        self.voter = voter ?? FeatureVoterCountAPI(namespace: namespace)
+        self.voter = voter
         self.style = style
         self.shuffledOrder = shuffledOrder
         self.sorting = sorting
@@ -78,20 +70,42 @@ public struct RoadmapConfiguration: Sendable {
         self.allowSearching = allowSearching
         self.allowsFilterByStatus = allowsFilterByStatus
     }
+    
+    /// Creates a new Roadmap configuration instance.
+    /// - Parameters:
+    ///   - sidetrackRoadmapId: The ID from the Sidetrack (https://roadmap.sidetrack.app) roadmap service.
+    ///   - style: Pick a `RoadmapStyle` that fits your app best. By default the `.standard` option is used.
+    ///   - shuffledOrder: Set this to true to have a different order of features everytime the view is presented
+    ///   - sorting: If set, will be used for sorting features.
+    ///   - allowVotes: Set this to true to if you want to let users vote. Set it to false for read-only mode. This can be used to only let paying users vote for example.
+    ///   - allowSearching: Set this to true to if you want to add a search bar so users can filter which features are shown.
+    public init(sidetrackRoadmapId: String,
+                style: RoadmapStyle = RoadmapTemplate.standard.style,
+                shuffledOrder: Bool = false,
+                sorting: (@Sendable (RoadmapFeature, RoadmapFeature) -> Bool)? = nil,
+                allowVotes: Bool = true,
+                allowSearching: Bool = false,
+                allowsFilterByStatus: Bool = false) {
+        
+        guard sidetrackRoadmapId.isEmpty == false else {
+            fatalError("Must provide a valid Sidetrack roadmap ID")
+        }
+        
+        self.init(
+            roadmapJSONURL: URL(string: "https://roadmap.sidetrack.app/roadmap/\(sidetrackRoadmapId)"),
+            voter: FeatureVoterSidetrack(), style: style,
+            shuffledOrder: shuffledOrder,
+            sorting: sorting,
+            allowVotes: allowVotes,
+            allowSearching: allowSearching,
+            allowsFilterByStatus: allowsFilterByStatus
+        )
+    }
 
 }
 
 extension RoadmapConfiguration {
-    
     static func sampleURL() -> RoadmapConfiguration {
-        .init(roadmapJSONURL: URL(string: "https://simplejsoncms.com/api/vq2juq1xhg")!, namespace: "roadmaptest")
-    }
-    
-    static func sampleRequest() -> RoadmapConfiguration {
-
-        var request = URLRequest(url: URL(string: "https://simplejsoncms.com/api/vq2juq1xhg")!)
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        return RoadmapConfiguration.init(roadmapRequest: request, namespace: "roadmaptest")
+        .init(sidetrackRoadmapId: "669827fe83191f8a3a802b4d")
     }
 }

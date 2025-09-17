@@ -1,23 +1,14 @@
 ![RoadmapHeader Copy@1x](https://user-images.githubusercontent.com/5016984/220204032-55fada28-ca90-4dc9-a931-65242bb6060c.png)
 
-⚠️ The countAPI which we use in Roadmap to let users vote has been down for six weeks or so. They're looking into it, but currently roadmap is unfortunately not working. The provider of the countapi has let us know that they don't expect the API to be fixed anytime soon, so we are looking for alternatives.
-
-Have a look at this PR for an alternative that we might introduce as the default soon!
-https://github.com/AvdLee/Roadmap/pull/71
-
-Here's a step by step guide to host your own server with Vapor (Swift):
-https://github.com/valentin-mille/RoadmapBackend
-
 # Roadmap
 Publish your roadmap inside your app and allow users to vote for upcoming features, without having to create a backend!
-
 
 ## Example
 ![RoadmapHeader@1x](https://user-images.githubusercontent.com/5016984/220204046-edec7519-5b1e-4764-9243-5fa6d768b69d.png)
 
 ## Setting up Roadmap
 ### Create a Roadmap JSON
-Roadmap works with a remote JSON configuration listing all features and their statuses. We recommend hosting it on GitHub Pages or [simplejsoncms.com](https://simplejsoncms.com).
+Roadmap works with a remote JSON configuration listing all features and their statuses. We recommend hosting it with [Sidetrack](https://roadmap.sidetrack.app) which provides an all-in-one solution, but you can also host it on GitHub Pages or [simplejsoncms.com](https://simplejsoncms.com).
 
 An example JSON looks as follows:
 
@@ -223,12 +214,11 @@ struct ContentView: View {
 ```
 
 ## Persisting Votes
-By default, Roadmap will utilise the [Free Counting API](https://countapi.xyz/) to store votes, you can check out their website for more information. A namespace is provided for you, utilising your application's bundle identifier, but you can override this when initalising the `RoadmapConfiguration`.
+Roadmap has built-in compatibility with the [Sidetrack Roadmap service](https://roadmap.sidetrack.app/). Logging in with a free social account grants you access to unlimited roadmaps and items. Through an intuitive UI it allows you add, edit, and delete roadmap items which people can vote on. It provides both the JSON for the roadmap URL, and an anonymous voter service allowing for voting in your app.
 
 ```swift
 let configuration = RoadmapConfiguration(
-    roadmapJSONURL: URL(string: "https://simplejsoncms.com/api/k2f11wikc6")!,
-    namespace: "my-custom-namespace"
+    sidetrackRoadmapId: "669827fe83191f8a3a802b4d"
 )
 ```
 
@@ -261,6 +251,9 @@ let configuration = RoadmapConfiguration(
 )
 ```
 
+Here's a step by step guide to host your own server with Vapor (Swift):
+https://github.com/valentin-mille/RoadmapBackend
+
 ## FAQ
 ### Does Roadmap prevent users from voting multiple times?
 Yes, if a user has voted on a feature they won't be able to vote again from within your app. Users can intercept your network traffic and replay the api call if they're really desperate to manipulate your votes.
@@ -275,7 +268,8 @@ To keep development of Roadmap easy and fun, we've decided to support iOS 15 & a
 Right now the list of features is loaded in random order. Our thinking is that this will prevent bias for the top voted features. We'll look into ways to make this possible in the future but since the votes are retrieved after the view has been loaded we'll need to look into it.
 
 ### Do I need to make changes to my app privacy report if I use Roadmap?
-Roadmap does not do any analytics or tracking. If a user voted on a feature it will increment a number on the count api. No identifiers are stored, not even anonymous ones.
+Roadmap does not do any analytics or tracking. If a user voted on a feature it will increment a number using the provided voting service. No identifiers are stored, not even anonymous ones.
+
 ### Is it possible for stupid people to manipulate my roadmap?
 Yes, we wanted to keep Roadmap as simple as possible to setup. If you're worried about competitors (or a user that really wants a specific feature) messing with your priority list, maybe use something else.
 
