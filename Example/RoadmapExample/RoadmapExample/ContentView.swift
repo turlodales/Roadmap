@@ -10,8 +10,7 @@ import SwiftUI
 
 struct ContentView: View {
     let configuration = RoadmapConfiguration(
-        roadmapJSONURL: URL(string: "https://roadmap.sidetrack.app/roadmap/669827fe83191f8a3a802b4d")!,
-        voter: FeatureVoterSidetrack(),
+        sidetrackRoadmapId: "669827fe83191f8a3a802b4d",
         allowVotes: true,
         allowSearching: true,
         allowsFilterByStatus: true
