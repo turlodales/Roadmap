@@ -20,14 +20,16 @@ public enum RoadmapTemplate: CaseIterable {
                                 titleFont: self.titleFont,
                                 numberFont: self.numberFont,
                                 statusFont: self.captionFont,
-                                cornerRadius: 10)
+                                cornerRadius: 10,
+                                cellRadius: 18)
         case .playful:
             return RoadmapStyle(upvoteIcon: Image(systemName: "arrow.up"),
                                 unvoteIcon: Image(systemName: "arrow.down"),
                                 titleFont: self.titleFont,
                                 numberFont: self.numberFont,
                                 statusFont: self.captionFont,
-                                cornerRadius: 15)
+                                cornerRadius: 18,
+                                cellRadius: 26)
         case .classy:
             return RoadmapStyle(upvoteIcon: Image(systemName: "chevron.up"),
                                 unvoteIcon: Image(systemName: "chevron.down"),

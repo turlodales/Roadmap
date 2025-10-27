@@ -11,6 +11,7 @@ import SwiftUI
 struct ContentView: View {
     let configuration = RoadmapConfiguration(
         sidetrackRoadmapId: "669827fe83191f8a3a802b4d",
+        style: RoadmapTemplate.standard.style,
         allowVotes: true,
         allowSearching: true,
         allowsFilterByStatus: true
@@ -53,7 +54,7 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem {
                     Link(destination: URL(string: "https://github.com/AvdLee/Roadmap")!) {
-                        Image(systemName: "questionmark.app.fill")
+                        Image(systemName: "questionmark")
                             .symbolRenderingMode(.hierarchical)
                     }
                 }
