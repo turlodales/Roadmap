@@ -29,6 +29,9 @@ public struct RoadmapStyle: Sendable {
     /// The corner radius for the upvote button
     public var radius: CGFloat
     
+    /// The corner radius for the cell
+    public var cellRadius: CGFloat
+    
     /// The backgroundColor of each cell
     public var cellColor: Color?
 
@@ -61,6 +64,7 @@ public struct RoadmapStyle: Sendable {
                 statusFont: Font,
                 statusTintColor: @escaping @Sendable (String) -> Color = { _ in Color.primary },
                 cornerRadius: CGFloat,
+                cellRadius: CGFloat? = nil,
                 cellColor: Color? = nil,
                 cellMaterial: Material? = nil,
                 selectedColor: Color = .white,
@@ -73,6 +77,7 @@ public struct RoadmapStyle: Sendable {
         self.statusFont = statusFont
         self.statusTintColor = statusTintColor
         self.radius = cornerRadius
+        self.cellRadius = cellRadius ?? cornerRadius
         self.cellColor = cellColor
         self.cellMaterial = cellMaterial
         self.selectedForegroundColor = selectedColor
