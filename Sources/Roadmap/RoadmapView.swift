@@ -66,6 +66,9 @@ public struct RoadmapView<Header: View, Footer: View>: View {
                     RoadmapFeatureView(viewModel: viewModel.featureViewModel(for: feature))
                         .macOSListRowSeparatorHidden()
                         .listRowBackground(Color.clear)
+                    #if os(iOS)
+                        .listRowInsets(.init(top: 0, leading: 16, bottom: 16, trailing: 16))
+                    #endif
                 }
                 footer
             }
